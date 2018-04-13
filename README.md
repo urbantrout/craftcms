@@ -1,3 +1,10 @@
+# Craft CMS Docker Image
+
+Comes with Craft 3 and pdo_pgsql for use with PostgreSQL.
+
+Example docker-compose.yml
+
+```yml
 version: '3.4'
 
 services:
@@ -12,7 +19,7 @@ services:
       - web:/var/www/html
 
   web:
-    image: craftcms-starter
+    image: craftcms
     build: .
     links:
       - postgres
@@ -20,7 +27,6 @@ services:
     volumes:
       - ./templates:/var/www/html/templates
       - web:/var/www/html
-      #- ./config:/var/www/html/craft/config
     environment:
       REDIS_HOST: redis
       SESSION_DRIVER: redis
@@ -55,3 +61,4 @@ services:
 volumes:
   data:
   web:
+```
