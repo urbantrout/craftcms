@@ -12,7 +12,7 @@ services:
       - web:/var/www/html
 
   web:
-    image: craftcms-starter
+    image: craftcms
     build: .
     links:
       - postgres
