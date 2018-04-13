@@ -1,0 +1,51 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    volumes:
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - web:/var/www/html:ro
+
+  web:
+    image: craftcms-starter
+    build: .
+    links:
+      - postgres
+      - redis
+    volumes:
+      - ./templates:/var/www/html/templates
+      - web:/var/www/html
+      #- ./config:/var/www/html/craft/config
+    environment:
+      REDIS_HOST: redis
+      SESSION_DRIVER: redis
+      CACHE_DRIVER: redis
+
+      DB_HOST: postgresql
+      DB_NAME: craft
+      DB_PORT: 5432
+
+  postgres:
+    image: postgres:10.3-alpine
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_USER: craft
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: craft
+    volumes:
+      # Persistent data
+      - data:/var/lib/postgresql
+
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - data:/data
+
+volumes:
+  data:
+  web:
