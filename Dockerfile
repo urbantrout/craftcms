@@ -26,11 +26,9 @@ RUN set -ex \
     && apk add --no-cache postgresql-dev \
     && docker-php-ext-install pdo_pgsql
 
-# COPY config/php/php.ini /usr/local/etc/php/
+ADD php.ini /usr/local/etc/php/
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN chown -R www-data:www-data /var/www/html/
 USER www-data
 RUN composer create-project craftcms/craft /var/www/html
-
-
