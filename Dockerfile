@@ -5,7 +5,7 @@ LABEL maintainer="harald@urbantrout.io"
 ENV COMPOSER_NO_INTERACTION=1
 
 RUN set -ex \
-    && apk add --update --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ imagemagick-dev libtool make pcre-dev postgresql-dev libintl icu icu-dev \
+    && apk add --update --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ imagemagick-dev libtool make pcre-dev postgresql-dev postgresql libintl icu icu-dev \
     && docker-php-ext-configure gd \
     --with-gd \
     --with-freetype-dir=/usr/include/ \
