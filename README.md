@@ -16,11 +16,11 @@ services:
       - web
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./assets:/var/www/html/web/assets
       - web:/var/www/html
 
   web:
-    image: craftcms
-    build: .
+    image: urbantrout/craftcms
     links:
       - postgres
       - redis
