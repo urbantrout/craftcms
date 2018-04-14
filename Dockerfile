@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine
+FROM php:7.2-fpm-alpine3.7
 
 LABEL maintainer="harald@urbantrout.io"
 
