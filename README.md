@@ -32,8 +32,8 @@ services:
     links:
       - web
     volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-      - ./assets:/var/www/html/web/assets
+      - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
+      - ./assets:/var/www/html/web/assets # For media, js and css files
       - web:/var/www/html
 
   craft:
@@ -42,7 +42,7 @@ services:
       - postgres
       - redis
     volumes:
-      - ./templates:/var/www/html/templates
+      - ./templates:/var/www/html/templates # Craft CMS template files
       - web:/var/www/html
     environment:
       REDIS_HOST: redis
@@ -77,7 +77,7 @@ services:
 
 volumes:
   data:
-  web:
+  web: # Needed so that nginx and craft services can access the same files
 ```
 
 ```nginx
