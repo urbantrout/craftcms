@@ -5,7 +5,7 @@ Comes with Craft 3 and pdo_pgsql for use with PostgreSQL.
 Example docker-compose.yml
 
 ```yml
-version: '3.4'
+version: '2.0'
 
 services:
   nginx:
