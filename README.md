@@ -20,6 +20,8 @@ You only need two files:
 * docker-compose.yml
 * default.conf
 
+### docker-compose
+
 ```yml
 # docker-compose.yml
 version: '2.0'
@@ -79,6 +81,10 @@ volumes:
   data:
   web: # Needed so that nginx and craft services can access the same files
 ```
+
+### nginx configuraion
+
+Create a file called **default.conf** in to your project directory:
 
 ```nginx
 # default.conf
