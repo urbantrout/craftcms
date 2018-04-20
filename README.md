@@ -111,4 +111,4 @@ server {
 }
 ```
 
-Run `docker-compose up` and visit http://localhost/admin
+Run `docker-compose up` and visit http://localhost/admin. Voilà!
