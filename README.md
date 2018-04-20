@@ -1,11 +1,28 @@
 # Craft CMS Docker Image
 
+Lightweight Craft CMS 3 Image
+
 Comes with Craft 3 and pdo_pgsql for use with PostgreSQL.
 
-Example docker-compose.yml
+Bring your own webserver and database.
+
+## Features
+
+* pdo_pgsql
+* pg_dump for backups
+* redis
+* imagemagick
+
+## Example Setup
+
+You only need two files:
+
+* docker-compose.yml
+* default.conf
 
 ```yml
-version: '3.4'
+# docker-compose.yml
+version: '2.0'
 
 services:
   nginx:
@@ -19,7 +36,7 @@ services:
       - ./assets:/var/www/html/web/assets
       - web:/var/www/html
 
-  web:
+  craft:
     image: urbantrout/craftcms
     links:
       - postgres
@@ -62,3 +79,36 @@ volumes:
   data:
   web:
 ```
+
+```nginx
+# default.conf
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name localhost;
+
+    index index.php index.html;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/html/web;
+    charset utf-8;
+
+    # Root directory location handler
+    location / {
+        try_files $uri/index.html $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        try_files $uri $uri/ /index.php?$query_string;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass web:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+```
+
+Run `docker-compose up` and visit http://localhost/admin
