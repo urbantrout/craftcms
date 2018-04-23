@@ -41,14 +41,11 @@ COPY ./php.ini /usr/local/etc/php/
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY ./run.sh /run.sh
-
 RUN chmod +x /run.sh \
     && chown www-data:www-data /run.sh
 
 WORKDIR /var/www/html
-
 RUN chown -R www-data:www-data .
-
 USER www-data
 
 # Install Craft CMS and save original dependencies in file
