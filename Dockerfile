@@ -5,9 +5,28 @@ LABEL maintainer="harald@urbantrout.io"
 ENV COMPOSER_NO_INTERACTION=1
 
 RUN set -ex \
-    && apk add --update --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ imagemagick imagemagick-dev libtool make pcre-dev postgresql-dev postgresql libintl icu icu-dev \
+    && apk add --update --no-cache \
+    freetype \
+    libpng \
+    libjpeg-turbo \
+    freetype-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    autoconf \
+    g++ \
+    imagemagick \
+    imagemagick-dev \
+    libtool \
+    make \
+    pcre-dev \
+    postgresql-dev \
+    postgresql \
+    libintl \
+    icu \
+    icu-dev \
+    bash \
+    jq \
     && docker-php-ext-configure gd \
-    --with-gd \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
@@ -16,9 +35,26 @@ RUN set -ex \
     && docker-php-ext-enable imagick redis \
     && rm -rf /tmp/pear \
     && apk del freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ libtool make pcre-dev
-COPY php.ini /usr/local/etc/php/
+
+COPY ./php.ini /usr/local/etc/php/
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN chown -R www-data:www-data /var/www/html/
+COPY ./run.sh /run.sh
+
+RUN chmod +x /run.sh \
+    && chown www-data:www-data /run.sh
+
+WORKDIR /var/www/html
+
+RUN chown -R www-data:www-data .
+
 USER www-data
-RUN composer create-project craftcms/craft /var/www/html
+
+# Install Craft CMS and save original dependencies in file
+RUN composer create-project craftcms/craft . \
+    && cp composer.json composer.base
+
+ENTRYPOINT [ "/run.sh" ]
+
+CMD [ "docker-php-entrypoint", "php-fpm"]

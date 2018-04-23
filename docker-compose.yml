@@ -1,0 +1,59 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    links:
+      - craft
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
+      - ./assets:/var/www/html/web/assets # For media, js and css files
+      - craftdata:/var/www/html
+
+  craft:
+    build: .
+    image: urbantrout/craftcms
+    volumes:
+      - ./templates:/var/www/html/templates # Craft CMS template files
+      - craftdata:/var/www/html
+    environment:
+      DEPENDENCIES: >- # additional composer packages (must be comma separated)
+        craftcms/redactor,
+
+      REDIS_HOST: redis
+      SESSION_DRIVER: redis
+      CACHE_DRIVER: redis
+
+      DB_SERVER: postgres
+      DB_NAME: craft
+      DB_USER: craft
+      DB_PASSWORD: secret
+      DB_DATABASE: craft
+      DB_SCHEMA: public
+      DB_DRIVER: pgsql
+      DB_PORT: 5432
+      DB_TABLE_PREFIX: ut
+
+  postgres:
+    image: postgres:10.3-alpine
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_USER: craft
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: craft
+    volumes:
+      # Persistent data
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - redisdata:/data
+
+volumes:
+  craftdata: # Needed so that nginx and craft services can access the same files
+  pgdata:
+  redisdata:
