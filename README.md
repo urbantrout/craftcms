@@ -24,25 +24,25 @@ You only need two files:
 
 ```yml
 # docker-compose.yml
-version: '3'
+version: '2.1'
 
 services:
   nginx:
     image: nginx:alpine
     ports:
       - 80:80
-    links:
+    depends_on:
+      - craft
+    volumes_from:
       - craft
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
       - ./assets:/var/www/html/web/assets # For media, js and css files
-      - craftdata:/var/www/html
 
   craft:
     image: urbantrout/craftcms
     volumes:
       - ./templates:/var/www/html/templates # Craft CMS template files
-      - craftdata:/var/www/html
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         craftcms/redactor,
@@ -79,7 +79,6 @@ services:
       - redisdata:/data
 
 volumes:
-  craftdata: # Needed so that nginx and craft services can access the same files
   pgdata:
   redisdata:
 ```

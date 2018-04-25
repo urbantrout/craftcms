@@ -52,6 +52,8 @@ USER www-data
 RUN composer create-project craftcms/craft . \
     && cp composer.json composer.base
 
+VOLUME [ "/var/www/html" ]
+
 ENTRYPOINT [ "/run.sh" ]
 
 CMD [ "docker-php-entrypoint", "php-fpm"]
