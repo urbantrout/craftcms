@@ -43,6 +43,7 @@ update_dependencies() {
 
 import_database() {
 	declare dump_zip
+	declare dump_sql
 
 	cd /var/www/html/storage/backups
 
@@ -52,7 +53,7 @@ import_database() {
 	dump_zip=$(find . -name '*.zip' -print)
 
 	if [[ "$dump_zip" ]]; then
-		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found"
+		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found (zip file)"
 
 		if grep -q $dump_zip .ignore; then
 			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
@@ -63,6 +64,23 @@ import_database() {
 			done
 
 			zcat "$dump_zip" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_zip" >>.ignore
+		fi
+	fi
+
+	dump_sql=$(find . -name '*.sql' -print)
+
+	if [[ "$dump_sql" ]]; then
+		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found (sql file)"
+
+		if grep -q $dump_sql .ignore; then
+			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
+		else
+			while ! pg_isready -h $DB_SERVER; do
+				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+				sleep 1
+			done
+
+			cat "$dump_sql" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_sql" >>.ignore
 		fi
 	fi
 }
