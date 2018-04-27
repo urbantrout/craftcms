@@ -8,6 +8,8 @@ Bring your own webserver and database.
 
 ## Features
 
+* Automatically requires and removes additional plugins via DEPENDENCIES environment variable
+* Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup, just use the built-in backup tool within the Craft CMS Control Panel.
 * pdo_pgsql
 * pg_dump for backups
 * redis
@@ -41,7 +43,10 @@ services:
 
   craft:
     image: urbantrout/craftcms
+    depends_on:
+      - postgres
     volumes:
+      - ./backups:/var/www/html/storage/backups # Used for db restore on start.
       - ./templates:/var/www/html/templates # Craft CMS template files
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
@@ -83,7 +88,7 @@ volumes:
   redisdata:
 ```
 
-### nginx configuraion
+### nginx configuration
 
 Create a file called **default.conf** in to your project directory:
 

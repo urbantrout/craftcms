@@ -41,7 +41,35 @@ update_dependencies() {
 	fi
 }
 
+import_database() {
+	declare dump_zip
+
+	cd /var/www/html/storage/backups
+
+	echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
+	chmod 600 ~/.pgpass
+
+	dump_zip=$(find . -name '*.zip' -print)
+
+	if [[ "$dump_zip" ]]; then
+		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found"
+
+		if grep -q $dump_zip .ignore; then
+			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
+		else
+			while ! pg_isready -h $DB_SERVER; do
+				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+				sleep 1
+			done
+
+			zcat "$dump_zip" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_zip" >>.ignore
+		fi
+	fi
+}
+
 update_dependencies &
+
+import_database &
 
 # Start php-fpm
 exec "$@"

@@ -15,9 +15,11 @@ services:
       - ./assets:/var/www/html/web/assets # For media, js and css files
 
   craft:
-    build: .
     image: urbantrout/craftcms
+    depends_on:
+      - postgres
     volumes:
+      - ./backups:/var/www/html/storage/backups
       - ./templates:/var/www/html/templates # Craft CMS template files
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
