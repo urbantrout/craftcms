@@ -29,13 +29,13 @@ update_dependencies() {
 	removable=($(comm -13 <(printf '%s\n' "${DEPENDENCIES[@]}" | LC_ALL=C sort) <(printf '%s\n' "${additional[@]}" | LC_ALL=C sort)))
 
 	if [ ${#removable[*]} -gt 0 ]; then
-		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Remove packages"
+		h2 "Remove packages"
 		echo ${removable[*]}
 		composer remove ${removable[*]}
 	fi
 
 	if [ ${#require[*]} -gt 0 ]; then
-		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Install packages"
+		h2 "Install packages"
 		echo ${require[*]}
 		composer require ${require[*]}
 	fi
@@ -53,13 +53,13 @@ import_database() {
 	dump_zip=$(find . -name '*.zip' -print)
 
 	if [[ "$dump_zip" ]]; then
-		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found (zip file)"
+		h2 "Database dump found (zip file)"
 
 		if grep -q $dump_zip .ignore; then
-			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
+			h2 "Ignoring file because it is listed in .ignore"
 		else
 			while ! pg_isready -h $DB_SERVER; do
-				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+				h2 "Waiting for PostreSQL server"
 				sleep 1
 			done
 
@@ -70,19 +70,27 @@ import_database() {
 	dump_sql=$(find . -name '*.sql' -print)
 
 	if [[ "$dump_sql" ]]; then
-		printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Database dump found (sql file)"
+		h2 "Database dump found (sql file)"
 
 		if grep -q $dump_sql .ignore; then
-			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
+			h2 "Ignoring file because it is listed in .ignore"
 		else
 			while ! pg_isready -h $DB_SERVER; do
-				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+				h2 "Waiting for PostreSQL server"
 				sleep 1
 			done
 
 			cat "$dump_sql" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_sql" >>.ignore
 		fi
 	fi
+}
+
+# --------------------------------------------
+# Helpers
+# --------------------------------------------
+
+h2() {
+    printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "$*"
 }
 
 update_dependencies &
