@@ -37,7 +37,11 @@ RUN set -ex \
     && rm -rf /tmp/pear \
     && apk del freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ libtool make pcre-dev
 
-COPY ./php.ini /usr/local/etc/php/
+RUN apk add libxml2-dev && \
+    docker-php-ext-install soap	
+
+COPY ./config/php/php.ini /usr/local/etc/php/
+# COPY ./config/php/php-pfm.conf /usr/local/etc/php/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
