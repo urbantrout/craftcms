@@ -12,6 +12,7 @@ RUN set -ex \
     freetype-dev \
     libpng-dev \
     libjpeg-turbo-dev \
+    libxml2-dev \
     autoconf \
     g++ \
     imagemagick \
@@ -31,17 +32,13 @@ RUN set -ex \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd zip intl pdo_pgsql \
+    && docker-php-ext-install gd soap zip intl pdo_pgsql \
     && pecl install imagick redis \
     && docker-php-ext-enable imagick redis \
     && rm -rf /tmp/pear \
     && apk del freetype-dev libpng-dev libjpeg-turbo-dev autoconf g++ libtool make pcre-dev
 
-RUN apk add libxml2-dev && \
-    docker-php-ext-install soap	
-
-COPY ./config/php/php.ini /usr/local/etc/php/
-# COPY ./config/php/php-pfm.conf /usr/local/etc/php/
+COPY ./php.ini /usr/local/etc/php/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
