@@ -12,6 +12,7 @@ RUN set -ex \
     freetype-dev \
     libpng-dev \
     libjpeg-turbo-dev \
+    libxml2-dev \
     autoconf \
     g++ \
     imagemagick \
@@ -31,7 +32,7 @@ RUN set -ex \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd zip intl pdo_pgsql \
+    && docker-php-ext-install gd soap zip intl pdo_pgsql \
     && pecl install imagick redis \
     && docker-php-ext-enable imagick redis \
     && rm -rf /tmp/pear \
