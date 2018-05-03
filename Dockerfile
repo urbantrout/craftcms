@@ -28,6 +28,7 @@ RUN set -ex \
     bash \
     jq \
     gzip \
+    shadow \
     && docker-php-ext-configure gd \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
@@ -43,11 +44,12 @@ COPY ./php.ini /usr/local/etc/php/
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY ./run.sh /run.sh
-RUN chmod +x /run.sh \
-    && chown www-data:www-data /run.sh
+RUN /usr/sbin/usermod -u 1000 www-data \
+    && chmod +x /run.sh \
+    && chown 1000 /run.sh
 
 WORKDIR /var/www/html
-RUN chown -R www-data:www-data .
+RUN chown -R 1000 .
 USER www-data
 
 # Install Craft CMS and save original dependencies in file
