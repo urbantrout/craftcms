@@ -48,6 +48,8 @@ services:
     volumes:
       - ./backups:/var/www/html/storage/backups # Used for db restore on start.
       - ./templates:/var/www/html/templates # Craft CMS template files
+      - ./translations:/var/www/html/translations
+      - ./redactor:/var/www/html/config/redactor
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         craftcms/redactor,
