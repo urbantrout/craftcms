@@ -52,8 +52,8 @@ services:
       - ./redactor:/var/www/html/config/redactor
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
+        yiisoft/yii2-redis,
         craftcms/redactor,
-        craftcms/element-api
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis
@@ -142,7 +142,6 @@ If you change your dependencies, just run `docker-compose down && docker-compose
 ## Finish setup
 
 Run `docker-compose up` and visit http://localhost/admin. Voilà!
-
 
 ## Known Issues
 

@@ -23,6 +23,7 @@ services:
       - ./templates:/var/www/html/templates # Craft CMS template files
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
+        yiisoft/yii2-redis,
         craftcms/redactor,
 
       REDIS_HOST: redis
