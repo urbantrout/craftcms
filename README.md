@@ -39,7 +39,7 @@ services:
       - craft
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
-      - ./assets:/var/www/html/web/assets # For media, js and css files
+      - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
 
   craft:
     image: urbantrout/craftcms
