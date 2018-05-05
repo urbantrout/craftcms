@@ -2,7 +2,7 @@
 
 Lightweight Craft CMS 3 Image
 
-Comes with Craft 3 and pdo_pgsql for use with PostgreSQL.
+Comes with Craft CMS 3 and support for PostgreSQL or MySQL (`urbantrout/craftcms:mysql`).
 
 Bring your own webserver and database.
 
@@ -14,6 +14,7 @@ Bring your own webserver and database.
 * pg_dump for backups
 * redis
 * imagemagick
+* If you want to use MySQL instead of PostgreSQL just use the `urbantrout/craftcms:mysql` image
 
 ## Example Setup
 
@@ -22,7 +23,11 @@ You only need two files:
 * docker-compose.yml
 * default.conf
 
+Add `backups/.ignore` to your .gitignore file. This file is used for automatic db restores. Files listed in `backups/.ignore` do not get imported on start up.
+
 ### docker-compose
+
+#### PostgreSQL Example
 
 ```yml
 # docker-compose.yml
@@ -87,6 +92,74 @@ services:
 
 volumes:
   pgdata:
+  redisdata:
+```
+
+#### MySQL Database Example
+
+```yml
+# docker-compose.yml
+version: '2.1'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    depends_on:
+      - craft
+    volumes_from:
+      - craft
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
+      - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
+
+  craft:
+    image: urbantrout/craftcms:mysql # Use mysql instead of postgresql
+    depends_on:
+      - mariadb
+    volumes:
+      - ./backups:/var/www/html/storage/backups # Used for db restore on start.
+      - ./templates:/var/www/html/templates # Craft CMS template files
+      - ./translations:/var/www/html/translations
+      - ./redactor:/var/www/html/config/redactor
+    environment:
+      DEPENDENCIES: >- # additional composer packages (must be comma separated)
+        yiisoft/yii2-redis,
+        craftcms/redactor,
+
+      REDIS_HOST: redis
+      SESSION_DRIVER: redis
+      CACHE_DRIVER: redis
+
+      DB_SERVER: mariadb
+      DB_NAME: craft
+      DB_USER: craft
+      DB_PASSWORD: secret
+      DB_DATABASE: craft
+      DB_SCHEMA: public
+      DB_DRIVER: mysql
+      DB_PORT: 3306
+      DB_TABLE_PREFIX: ut
+
+  mariadb:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: craft
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: craft
+    volumes:
+      # Persistent data
+      - dbdata:/var/lib/mysql
+
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - redisdata:/data
+
+volumes:
+  dbdata:
   redisdata:
 ```
 
