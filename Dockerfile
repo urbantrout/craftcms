@@ -20,8 +20,7 @@ RUN set -ex \
     libtool \
     make \
     pcre-dev \
-    postgresql-dev \
-    postgresql \
+    mariadb-client \
     libintl \
     icu \
     icu-dev \
@@ -32,7 +31,7 @@ RUN set -ex \
     --with-freetype-dir=/usr/include/ \
     --with-png-dir=/usr/include/ \
     --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd soap zip intl pdo_pgsql \
+    && docker-php-ext-install gd soap zip intl mysqli pdo_mysql \
     && pecl install imagick redis \
     && docker-php-ext-enable imagick redis \
     && rm -rf /tmp/pear \

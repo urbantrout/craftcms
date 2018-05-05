@@ -15,9 +15,9 @@ services:
       - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
 
   craft:
-    image: urbantrout/craftcms
+    image: urbantrout/craftcms:mysql
     depends_on:
-      - postgres
+      - mariadb
     volumes:
       - ./backups:/var/www/html/storage/backups
       - ./templates:/var/www/html/templates # Craft CMS template files
@@ -30,26 +30,26 @@ services:
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
 
-      DB_SERVER: postgres
+      DB_SERVER: mariadb
       DB_NAME: craft
       DB_USER: craft
       DB_PASSWORD: secret
       DB_DATABASE: craft
       DB_SCHEMA: public
-      DB_DRIVER: pgsql
-      DB_PORT: 5432
+      DB_DRIVER: mysql
+      DB_PORT: 3306
       DB_TABLE_PREFIX: ut
 
-  postgres:
-    image: postgres:10.3-alpine
+  mariadb:
+    image: mariadb:10.1
     environment:
-      POSTGRES_ROOT_PASSWORD: root
-      POSTGRES_USER: craft
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: craft
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: craft
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: craft
     volumes:
       # Persistent data
-      - pgdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/mysql
 
   redis:
     image: redis:4-alpine
@@ -57,5 +57,5 @@ services:
       - redisdata:/data
 
 volumes:
-  pgdata:
+  dbdata:
   redisdata:

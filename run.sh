@@ -47,9 +47,6 @@ import_database() {
 
 	cd /var/www/html/storage/backups
 
-	echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
-	chmod 600 ~/.pgpass
-
 	dump_zip=$(find . -name '*.zip' -print)
 
 	if [[ "$dump_zip" ]]; then
@@ -58,12 +55,12 @@ import_database() {
 		if grep -q $dump_zip .ignore; then
 			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
 		else
-			while ! pg_isready -h $DB_SERVER; do
-				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+			while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
+				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for MySQL server"
 				sleep 1
 			done
 
-			zcat "$dump_zip" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_zip" >>.ignore
+			zcat "$dump_zip" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABSE && echo "$dump_zip" >>.ignore
 		fi
 	fi
 
@@ -75,12 +72,12 @@ import_database() {
 		if grep -q $dump_sql .ignore; then
 			printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Ignoring file because it is listed in .ignore"
 		else
-			while ! pg_isready -h $DB_SERVER; do
-				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for PostreSQL server"
+			while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
+				printf '\e[1;33m==>\e[37;1m %s\e[0m\n' "Waiting for MySQL server"
 				sleep 1
 			done
 
-			cat "$dump_sql" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_sql" >>.ignore
+			cat "$dump_sql" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && echo "$dump_sql" >>.ignore
 		fi
 	fi
 }
