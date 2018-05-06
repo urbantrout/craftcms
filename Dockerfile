@@ -43,9 +43,9 @@ COPY ./php.ini /usr/local/etc/php/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY ./run.sh /run.sh
-RUN chmod +x /run.sh \
-    && chown www-data:www-data /run.sh
+COPY scripts/ /scripts/
+RUN chown -R www-data:www-data /scripts \
+    && chmod -R +x /scripts
 
 WORKDIR /var/www/html
 RUN chown -R www-data:www-data .
@@ -57,6 +57,6 @@ RUN composer create-project craftcms/craft . \
 
 VOLUME [ "/var/www/html" ]
 
-ENTRYPOINT [ "/run.sh" ]
+ENTRYPOINT [ "/scripts/run.sh" ]
 
 CMD [ "docker-php-entrypoint", "php-fpm"]
