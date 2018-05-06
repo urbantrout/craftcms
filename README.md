@@ -127,11 +127,7 @@ services:
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         yiisoft/yii2-redis,
-<<<<<<< HEAD
-        craftcms/redactor,
-=======
         craftcms/redactor
->>>>>>> master
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis
