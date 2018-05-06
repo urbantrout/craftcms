@@ -2,7 +2,7 @@
 
 Lightweight Craft CMS 3 Image
 
-Comes with Craft CMS 3 and support for PostgreSQL or MySQL (`urbantrout/craftcms:mysql`).
+Comes with Craft CMS 3 and support for PostgreSQL (`urbantrout/craftcms:postgresql`) or MySQL (`urbantrout/craftcms:mysql`).
 
 Bring your own webserver and database.
 
@@ -10,11 +10,10 @@ Bring your own webserver and database.
 
 * Automatically requires and removes additional plugins via DEPENDENCIES environment variable
 * Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup, just use the built-in backup tool within the Craft CMS Control Panel.
-* pdo_pgsql
-* pg_dump for backups
 * redis
 * imagemagick
-* If you want to use MySQL instead of PostgreSQL just use the `urbantrout/craftcms:mysql` image
+* If you want to use PostgreSQL use the `urbantrout/craftcms:postgresql` image
+* If you want to use MySQL use the `urbantrout/craftcms:mysql` image
 
 ## Example Setup
 
@@ -47,7 +46,7 @@ services:
       - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
 
   craft:
-    image: urbantrout/craftcms
+    image: urbantrout/craftcms:postgresql
     depends_on:
       - postgres
     volumes:
