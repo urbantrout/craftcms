@@ -27,6 +27,7 @@ RUN set -ex \
     icu-dev \
     bash \
     jq \
+    git \
     gzip \
     && docker-php-ext-configure gd \
     --with-freetype-dir=/usr/include/ \

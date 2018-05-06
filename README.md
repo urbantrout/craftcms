@@ -123,10 +123,13 @@ services:
       - ./templates:/var/www/html/templates # Craft CMS template files
       - ./translations:/var/www/html/translations
       - ./redactor:/var/www/html/config/redactor
+      - /path/to/plugin:/plugins/plugin # If you want a local plugin for composer
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         yiisoft/yii2-redis,
         craftcms/redactor,
+        [vendor/package-name:branch-name]https://url-to-the-git-repo.git # Branch name should be prefixed with dev-${branchname}
+        [vendor/package-name:version]/path/to/volume # Version as 1.0.0
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis
@@ -209,6 +212,9 @@ In a docker-compose file:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         craftcms/redactor,
 ```
+
+You can add plugins from a public Git Repo, or from a local folder on your machine as Well.
+For local Plugins take care that you added a volume so that docker can use the plugin.
 
 If you change your dependencies, just run `docker-compose down && docker-compose up` to remove and recreate your container.
 
