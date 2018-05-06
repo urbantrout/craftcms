@@ -282,5 +282,5 @@ Run `docker-compose up` and visit http://localhost/admin. Voilà!
 
 ## Known Issues
 
-* `/run.sh: line 66: .ignore: Permssion denied`  
+* `.ignore: Permssion denied`  
   On Linux you need to change the owner and group of the directory ./backups to 82:82, otherwise docker cannot write to the .ignore file. This also applies to any other directory which you mount as volume and docker should be able to write to (e.g. assets/media for Craft CMS Assets). 82 is the UID and GID of www-data inside the docker container.
