@@ -67,7 +67,7 @@ update_dependencies() {
 
   done
 
-  printf '✅ 📌 all dependencies where required '
+  printf '✅ 📌 all dependencies where required \n\n'
 }
 
 import_database() {
