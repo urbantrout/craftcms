@@ -53,15 +53,15 @@ update_dependencies() {
 			name="${BASH_REMATCH[2]}"
 			version="${BASH_REMATCH[3]}"
 			url="${BASH_REMATCH[4]}"
-			printf "Install \e[0;32mlocal composer package\e[0m: \e[0;36m${name}\e[0m\n"
+			printf "Install \e[0;32mlocalcomposer package\e[0m: \e[0;36m${name}\e[0m\n"
 			composer config repositories.${name} '{"type": "path", "url": "'${url}'", "options": {"symlink": true}}'
 			composer require ${name}:${version}
 		else
-			printf "Install \e[0;32m composer package\e[0m: \e[0;36m${package}\e[0m\n"
+			printf "Install \e[0;32mcomposer package\e[0m: \e[0;36m${package}\e[0m\n"
 			composer require ${package}
 		fi
 
 	done
 
-	h2 '✅  All dependencies successfully installed.\n\n'
+	h2 '✅  All dependencies successfully installed.'
 }
