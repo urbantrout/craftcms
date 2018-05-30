@@ -45,13 +45,14 @@ services:
       - craft
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
-      - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
+      - ./assets:/var/www/html/web/assets # For static assets (media, js and css).
 
   craft:
     image: urbantrout/craftcms:postgresql
     depends_on:
       - postgres
     volumes:
+      - ./assets:/var/www/html/web/assets:z
       - ./backups:/var/www/html/storage/backups # Used for db restore on start.
       - ./templates:/var/www/html/templates # Craft CMS template files
       - ./translations:/var/www/html/translations
@@ -113,13 +114,14 @@ services:
       - craft
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf # nginx configuration (see below)
-      - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
+      - ./assets:/var/www/html/web/assets # For static assets (media, js and css).
 
   craft:
     image: urbantrout/craftcms:mysql # Use mysql instead of postgresql
     depends_on:
       - mariadb
     volumes:
+      - ./assets:/var/www/html/web/assets:z
       - ./backups:/var/www/html/storage/backups # Used for db restore on start.
       - ./templates:/var/www/html/templates # Craft CMS template files
       - ./translations:/var/www/html/translations
