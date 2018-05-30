@@ -11,13 +11,13 @@ Bring your own webserver and database.
 * [Plugins and other dependencies](#plugins)  
   Automatically requires and removes additional plugins via DEPENDENCIES environment variable
 * [Import SQL files](#import-database)  
-  Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup, just use the built-in backup tool within the Craft CMS Control Panel.
+  Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup  use the built-in backup tool within the Craft CMS Control Panel.
 * [redis](#redis)
 * imagemagick
 * If you want to use PostgreSQL use the `urbantrout/craftcms:postgresql` image
 * If you want to use MySQL use the `urbantrout/craftcms:mysql` image
 
-## Example Setup
+## Getting started
 
 You only need two files:
 
@@ -203,7 +203,7 @@ server {
 
 ## Plugins
 
-Just add your plugins to the environment variable DEPENDENCIES. A script then automatically adds or removes those dependencies when you create the container.
+Add your plugins to the environment variable DEPENDENCIES. A script then automatically adds or removes those dependencies when you create the container.
 
 In a docker-compose file:
 
@@ -221,7 +221,7 @@ In a docker-compose file:
 You can add plugins from a public Git Repo, or from a local folder on your machine as Well.
 For local Plugins take care that you added a volume so that docker can use the plugin.
 
-If you change your dependencies, just run `docker-compose down && docker-compose up` to remove and recreate your container.
+If you change your dependencies, run `docker-compose down && docker-compose up` to remove and recreate your container.
 
 ## Import database
 
