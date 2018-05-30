@@ -6,7 +6,7 @@ source /scripts/helpers.sh
 
 source /scripts/dependencies.sh && update_dependencies &
 
-source /scripts/database.sh && import_database &
+source /scripts/database.sh && check_database &
 
 wait
 

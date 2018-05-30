@@ -28,6 +28,7 @@ RUN set -ex \
     bash \
     jq \
     git \
+    findutils \
     gzip \
     && docker-php-ext-configure gd \
     --with-freetype-dir=/usr/include/ \

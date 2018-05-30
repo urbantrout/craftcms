@@ -1,44 +1,42 @@
-# TODO: Refactor code (not DRY yet)
 import_database() {
-	declare dump_zip
-	declare dump_sql
+	if grep -q $1 .ignore; then
+		h2 "Ignoring file because it is listed in .ignore"
+	else
+		# Save DB credentials
+		echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
+		chmod 600 ~/.pgpass
+
+		while ! pg_isready -h $DB_SERVER; do
+			h2 "Waiting for PostreSQL server"
+			sleep 1
+		done
+
+		cat "$1" | psql -h $DB_SERVER -U $DB_USER && echo "$1" >>.ignore
+	fi
+}
+
+check_database() {
+	declare zip_file
+	declare sql_file
 
 	cd /var/www/html/storage/backups
 
-	echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
-	chmod 600 ~/.pgpass
+	# Find most recent zip file (mtime)
+	zip_file=$(find . -name "*.zip" -printf "%t %p\n" | sort -n | cut -d' ' -f 6- | tail -n1)
 
-	dump_zip=$(find . -name '*.zip' -print)
+	if [[ "$zip_file" ]]; then
+		h2 "Decompressing zip file: ${zip_file}"
 
-	if [[ "$dump_zip" ]]; then
-		h2 "Database dump found (zip file)"
-
-		if grep -q $dump_zip .ignore; then
-			h2 "Ignoring file because it is listed in .ignore"
-		else
-			while ! pg_isready -h $DB_SERVER; do
-				h2 "Waiting for PostreSQL server"
-				sleep 1
-			done
-
-			zcat "$dump_zip" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_zip" >>.ignore
-		fi
+		# Unzip file and force overwrite
+		unzip -o $zip_file
 	fi
 
-	dump_sql=$(find . -name '*.sql' -print)
+	# Find most recent sql file (mtime)
+	sql_file=$(find . -name "*.sql" -printf "%t %p\n" | sort -n | cut -d' ' -f 6- | tail -n1)
 
-	if [[ "$dump_sql" ]]; then
-		h2 "Database dump found (sql file)"
+	if [[ "$sql_file" ]]; then
+		h2 "Database dump found: ${sql_file}"
 
-		if grep -q $dump_sql .ignore; then
-			h2 "Ignoring file because it is listed in .ignore"
-		else
-			while ! pg_isready -h $DB_SERVER; do
-				h2 "Waiting for PostreSQL server"
-				sleep 1
-			done
-
-			cat "$dump_sql" | psql -h $DB_SERVER -U $DB_USER && echo "$dump_sql" >>.ignore
-		fi
+		import_database $sql_file
 	fi
 }
