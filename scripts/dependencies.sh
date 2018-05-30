@@ -46,14 +46,14 @@ update_dependencies() {
 			name="${BASH_REMATCH[2]}"
 			version="${BASH_REMATCH[3]}"
 			url="${BASH_REMATCH[4]}"
-			printf "Install \e[0;32mvcs composer package\e[0m: \e[0;36m${name}\e[0m\n"
+			printf "Install \e[0;32mvcs composer package\e[0m: \e[0;36m${name} ${version}\e[0m\n"
 			composer config repositories.${name} '{"type": "vcs", "url": "'${url}'", "no-api": true }'
 			composer require ${name}:${version}
 		elif [[ $package =~ $regexLocal ]]; then
 			name="${BASH_REMATCH[2]}"
 			version="${BASH_REMATCH[3]}"
 			url="${BASH_REMATCH[4]}"
-			printf "Install \e[0;32mlocalcomposer package\e[0m: \e[0;36m${name}\e[0m\n"
+			printf "Install \e[0;32mlocalcomposer package\e[0m: \e[0;36m${name} ${version}\e[0m\n"
 			composer config repositories.${name} '{"type": "path", "url": "'${url}'", "options": {"symlink": true}}'
 			composer require ${name}:${version}
 		else
