@@ -37,7 +37,8 @@ check_database() {
 	else
 		h2 "Setup Craft CMS"
 
-		./craft setup/security-key &&
+		cd /var/www/html &&
+			./craft setup/security-key &&
 			./craft install --interactive=0 --email="${CRAFTCMS_EMAIL}" --username="${CRAFTCMS_USERNAME:-admin}" --password="${CRAFTCMS_PASSWORD}" --siteName="${CRAFTCMS_SITENAME}" --siteUrl="${CRAFTCMS_SITEURL:-@web}"
 	fi
 }
