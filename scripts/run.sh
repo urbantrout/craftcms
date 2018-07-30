@@ -7,9 +7,8 @@ source /scripts/database.sh
 source /scripts/composer.sh
 source /scripts/plugins.sh
 
-check_database &
-
-update_dependencies &&
+check_database &&
+	update_dependencies &&
 	activate_plugins
 
 wait
