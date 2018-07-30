@@ -4,7 +4,7 @@ set -e
 
 source /scripts/helpers.sh
 source /scripts/database.sh
-source /scripts/dependencies.sh
+source /scripts/composer.sh
 source /scripts/plugins.sh
 
 check_database &

@@ -22,7 +22,7 @@ check_database() {
 
 	if [[ "$zip_file" ]]; then
 		h2 "Decompressing zip file: ${zip_file}"
-
+		gst#
 		# Unzip file and force overwrite
 		unzip -o $zip_file
 	fi
@@ -36,6 +36,11 @@ check_database() {
 		import_database $sql_file
 	else
 		h2 "Setup Craft CMS"
+
+		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
+			h2 "Waiting for MySQL server"
+			sleep 1
+		done
 
 		cd /var/www/html &&
 			./craft setup/security-key &&
