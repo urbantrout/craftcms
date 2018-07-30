@@ -3,10 +3,14 @@
 set -e
 
 source /scripts/helpers.sh
+source /scripts/database.sh
+source /scripts/dependencies.sh
+source /scripts/plugins.sh
 
-source /scripts/database.sh && check_database &
+check_database &
 
-source /scripts/dependencies.sh && update_dependencies &
+update_dependencies &&
+	activate_plugins
 
 wait
 
