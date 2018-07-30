@@ -15,7 +15,7 @@ services:
       - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
 
   craft:
-    image: urbantrout/craftcms
+    image: urbantrout/craftcms:postgresql
     depends_on:
       - postgres
     volumes:
@@ -25,6 +25,11 @@ services:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         yiisoft/yii2-redis,
         craftcms/redactor,
+
+      CRAFTCMS_EMAIL: harald@urbantrout.io
+      CRAFTCMS_USERNAME: admin
+      CRAFTCMS_PASSWORD: super-secret-password
+      CRAFTCMS_SITENAME: Craft CMS Installation
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis

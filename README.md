@@ -8,21 +8,22 @@ Bring your own webserver and database.
 
 ## Features
 
-* [Plugins and other dependencies](#plugins)  
+- [Plugins and other dependencies](#plugins)  
   Automatically requires and removes additional plugins via DEPENDENCIES environment variable
-* [Import SQL files](#import-database)  
-  Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup  use the built-in backup tool within the Craft CMS Control Panel.
-* [redis](#redis)
-* imagemagick
-* If you want to use PostgreSQL use the `urbantrout/craftcms:postgresql` image
-* If you want to use MySQL use the `urbantrout/craftcms:mysql` image
+- [Import SQL files](#import-database)  
+  Automatically restores database backups located under ./backups (See volumes in docker-compose.yml below). To create a database backup use the built-in backup tool within the Craft CMS Control Panel.
+- Completely non-interactive installation of Craft CMS and plugins
+- [redis](#redis)
+- imagemagick
+- If you want to use PostgreSQL use the `urbantrout/craftcms:postgresql` image
+- If you want to use MySQL use the `urbantrout/craftcms:mysql` image
 
 ## Getting started
 
 You only need two files:
 
-* docker-compose.yml
-* default.conf
+- docker-compose.yml
+- default.conf
 
 Add `backups/.ignore` to your .gitignore file. This file is used for automatic db restores. Files listed in `backups/.ignore` do not get imported on start up.
 
@@ -60,7 +61,13 @@ services:
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         yiisoft/yii2-redis,
-        craftcms/redactor,
+        craftcms/redactor:2.0.1,
+
+      CRAFTCMS_EMAIL: admin@company.com
+      CRAFTCMS_USERNAME: admin
+      CRAFTCMS_PASSWORD: super-secret-password
+      CRAFTCMS_SITENAME: Craft CMS Installation
+      CRAFTCMS_SITEURL: http://dev.project.com # Optional
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis
@@ -129,7 +136,13 @@ services:
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
         yiisoft/yii2-redis,
-        craftcms/redactor
+        craftcms/redactor:2.0.1
+
+      CRAFTCMS_EMAIL: admin@company.com
+      CRAFTCMS_USERNAME: admin
+      CRAFTCMS_PASSWORD: super-secret-password
+      CRAFTCMS_SITENAME: Craft CMS Installation
+      CRAFTCMS_SITEURL: http://dev.project.com # Optional
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis
@@ -213,8 +226,8 @@ In a docker-compose file:
 
     environment:
       DEPENDENCIES: >- # additional composer packages (must be comma separated)
-        craftcms/redactor,
-        [vendor/package-name:branch-name]https://url-to-the-git-repo.git # Branch name should be prefixed with dev-${branchname}
+        craftcms/redactor:2.0.1,
+        [vendor/package-name:branch-name]https://url-to-the-git-repo.git, # Branch name should be prefixed with dev-${branchname},
         [vendor/package-name:version]/path/to/volume # Version as 1.0.0
 ```
 
@@ -280,5 +293,5 @@ Run `docker-compose up` and visit http://localhost/admin. Voilà!
 
 ## Known Issues
 
-* `.ignore: Permssion denied`  
+- `.ignore: Permssion denied`  
   On Linux you need to change the owner and group of the directory ./backups to 82:82, otherwise docker cannot write to the .ignore file. This also applies to any other directory which you mount as volume and docker should be able to write to (e.g. assets/media for Craft CMS Assets). 82 is the UID and GID of www-data inside the docker container.
