@@ -34,5 +34,10 @@ check_database() {
 		h2 "Database dump found: ${sql_file}"
 
 		import_database $sql_file
+	else
+		h2 "Setup Craft CMS"
+
+		./craft setup/security-key &&
+			./craft install --interactive=0 --email="${CRAFTCMS_EMAIL}" --username="${CRAFTCMS_USERNAME:-admin}" --password="${CRAFTCMS_PASSWORD}" --siteName="${CRAFTCMS_SITENAME}" --siteUrl="${CRAFTCMS_SITEURL:-@web}"
 	fi
 }
