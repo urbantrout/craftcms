@@ -2,18 +2,22 @@ import_database() {
 	if grep -q $1 .ignore; then
 		h2 "Ignoring file because it is listed in .ignore"
 	else
-		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
-			h2 "Waiting for MySQL server"
+		while ! pg_isready -h $DB_SERVER; do
+			h2 "Waiting for PostreSQL server"
 			sleep 1
 		done
 
-		cat "$1" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && echo "$1" >>.ignore
+		cat "$1" | psql -h $DB_SERVER -U $DB_USER && echo "$1" >>.ignore
 	fi
 }
 
 check_database() {
 	declare zip_file
 	declare sql_file
+
+	# Save DB credentials
+	echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
+	chmod 600 ~/.pgpass
 
 	cd /var/www/html/storage/backups
 
@@ -37,8 +41,8 @@ check_database() {
 	else
 		h2 "Setup Craft CMS"
 
-		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
-			h2 "Waiting for MySQL server"
+		while ! pg_isready -h $DB_SERVER; do
+			h2 "Waiting for PostreSQL server"
 			sleep 1
 		done
 
