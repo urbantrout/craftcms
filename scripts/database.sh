@@ -1,5 +1,5 @@
 import_database() {
-	if grep -q $1 .ignore; then
+	if grep -q $1 backups/.ignore; then
 		h2 "Ignoring file because it is listed in .ignore"
 	else
 		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
@@ -7,7 +7,7 @@ import_database() {
 			sleep 1
 		done
 
-		cat "$1" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && echo "$1" >>.ignore
+		cat "$1" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && echo "$1" >>backups/.ignore
 	fi
 }
 
