@@ -19,20 +19,20 @@ check_database() {
 	echo $DB_SERVER:$DB_PORT:$DB_DATABASE:$DB_USER:$DB_PASSWORD >~/.pgpass
 	chmod 600 ~/.pgpass
 
-	cd /var/www/html/storage/backups
+	cd /var/www/html/storage
 
 	# Find most recent zip file (mtime)
-	zip_file=$(find . -name "*.zip" -printf "%t %p\n" | sort -n | rev | cut -d' ' -f 1 | rev | tail -n1)
+	zip_file=$(find backups -name "*.zip" -printf "%t %p\n" | sort -n | rev | cut -d' ' -f 1 | rev | tail -n1)
 
 	if [[ "$zip_file" ]]; then
 		h2 "Decompressing zip file: ${zip_file}"
 
 		# Unzip file and force overwrite
-		unzip -o $zip_file
+		unzip -o $zip_file -d backups
 	fi
 
 	# Find most recent sql file (mtime)
-	sql_file=$(find . -name "*.sql" -printf "%t %p\n" | sort -n | rev | cut -d' ' -f 1 | rev | tail -n1)
+	sql_file=$(find backups -name "*.sql" -printf "%t %p\n" | sort -n | rev | cut -d' ' -f 1 | rev | tail -n1)
 
 	if [[ "$sql_file" ]]; then
 		h2 "Database dump found: ${sql_file}"
