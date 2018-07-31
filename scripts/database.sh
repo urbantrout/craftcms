@@ -22,7 +22,7 @@ check_database() {
 
 	if [[ "$zip_file" ]]; then
 		h2 "Decompressing zip file: ${zip_file}"
-		gst#
+
 		# Unzip file and force overwrite
 		unzip -o $zip_file
 	fi
