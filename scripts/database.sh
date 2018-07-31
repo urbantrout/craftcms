@@ -1,6 +1,6 @@
 import_database() {
 	if grep -q $1 backups/.ignore; then
-		h2 "Ignoring file because it is listed in .ignore"
+		h2 "Ignoring file because it is listed in backups/.ignore"
 	else
 		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
 			h2 "Waiting for MySQL server"
