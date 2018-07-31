@@ -1,13 +1,13 @@
 import_database() {
-	if grep -q $1 .ignore; then
-		h2 "Ignoring file because it is listed in .ignore"
+	if grep -q $1 backups/.ignore; then
+		h2 "Ignoring file because it is listed in backups/.ignore"
 	else
 		while ! pg_isready -h $DB_SERVER; do
 			h2 "Waiting for PostreSQL server"
 			sleep 1
 		done
 
-		cat "$1" | psql -h $DB_SERVER -U $DB_USER && echo "$1" >>.ignore
+		cat "$1" | psql -h $DB_SERVER -U $DB_USER && echo "$1" >>backups/.ignore
 	fi
 }
 
