@@ -30,6 +30,7 @@ services:
       CRAFTCMS_USERNAME: admin
       CRAFTCMS_PASSWORD: super-secret-password
       CRAFTCMS_SITENAME: Craft CMS Installation
+      CRAFTCMS_LANGUAGE: de-AT
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis

@@ -68,6 +68,7 @@ services:
       CRAFTCMS_PASSWORD: super-secret-password
       CRAFTCMS_SITENAME: Craft CMS Installation
       CRAFTCMS_SITEURL: http://dev.project.com # Optional
+      CRAFTCMS_LANGUAGE: de-AT # Optional
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis

@@ -48,6 +48,13 @@ check_database() {
 
 		cd /var/www/html &&
 			./craft setup/security-key &&
-			./craft install --interactive=0 --email="${CRAFTCMS_EMAIL}" --username="${CRAFTCMS_USERNAME:-admin}" --password="${CRAFTCMS_PASSWORD}" --siteName="${CRAFTCMS_SITENAME}" --siteUrl="${CRAFTCMS_SITEURL:-@web}"
+			./craft install \
+				--interactive=0 \
+				--email="${CRAFTCMS_EMAIL}" \
+				--username="${CRAFTCMS_USERNAME:-admin}" \
+				--password="${CRAFTCMS_PASSWORD}" \
+				--siteName="${CRAFTCMS_SITENAME}" \
+				--siteUrl="${CRAFTCMS_SITEURL:-@web}" \
+				--language="${CRAFTCMS_LANGUAGE:-en-US}"
 	fi
 }
