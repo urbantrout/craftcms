@@ -63,5 +63,9 @@ update_dependencies() {
 
 	done
 
+	h2 'Updating outdated dependencies.'
+
+	composer update
+
 	h2 '✅  All dependencies successfully installed.'
 }
