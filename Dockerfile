@@ -23,6 +23,7 @@ RUN set -ex \
     mariadb-client \
     libintl \
     icu \
+    postgresql-client \
     icu-dev \
     bash \
     jq \
