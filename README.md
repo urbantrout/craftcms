@@ -59,9 +59,9 @@ services:
       - ./translations:/var/www/html/translations
       - ./redactor:/var/www/html/config/redactor
     environment:
-      DEPENDENCIES: >- # additional composer packages (must be comma separated)
-        yiisoft/yii2-redis,
-        craftcms/redactor:2.0.1,
+      DEPENDENCIES: >- # additional composer packages
+        yiisoft/yii2-redis
+        craftcms/redactor:2.0.1
 
       CRAFTCMS_EMAIL: admin@company.com
       CRAFTCMS_USERNAME: admin
@@ -135,8 +135,8 @@ services:
       - ./translations:/var/www/html/translations
       - ./redactor:/var/www/html/config/redactor
     environment:
-      DEPENDENCIES: >- # additional composer packages (must be comma separated)
-        yiisoft/yii2-redis,
+      DEPENDENCIES: >- # additional composer packages
+        yiisoft/yii2-redis
         craftcms/redactor:2.0.1
 
       CRAFTCMS_EMAIL: admin@company.com
@@ -222,14 +222,14 @@ Add your plugins to the environment variable DEPENDENCIES. A script then automat
 In a docker-compose file:
 
 ```yaml
-    volumes:
-      - ./path/to/plugin:/plugins/plugin # If you want a local plugin for composer
+volumes:
+  - ./path/to/plugin:/plugins/plugin # If you want to use a local plugin with composer
 
-    environment:
-      DEPENDENCIES: >- # additional composer packages (must be comma separated)
-        craftcms/redactor:2.0.1,
-        [vendor/package-name:branch-name]https://url-to-the-git-repo.git, # Branch name should be prefixed with dev-${branchname},
-        [vendor/package-name:version]/path/to/volume # Version as 1.0.0
+environment:
+  DEPENDENCIES: >- # additional composer packages
+    craftcms/redactor:2.0.1
+    [vendor/package-name:branch-name]https://url-to-the-git-repo.git # branch-name needs to be prefixed with 'dev-'. (e.g. dev-development for branch development)
+    [vendor/package-name:version]/path/to/volume # Version as 1.0.0
 ```
 
 You can add plugins from a public Git Repo, or from a local folder on your machine as Well.
@@ -275,17 +275,17 @@ return [
 Add `yiisoft/yii2-redis` to your DEPENDENCIES env variable and create another volume for your redis configuration
 
 ```yaml
-    volumes:
-      - ./config/app.php:/var/www/html/config/app.php
+volumes:
+  - ./config/app.php:/var/www/html/config/app.php
 ```
 
 Add a redis service to your docker-compose.yml
 
 ```yaml
-  redis:
-    image: redis:4-alpine
-    volumes:
-      - redisdata:/data
+redis:
+  image: redis:4-alpine
+  volumes:
+    - redisdata:/data
 ```
 
 ## Finish setup
