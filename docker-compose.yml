@@ -32,6 +32,8 @@ services:
       CRAFTCMS_SITENAME: Craft CMS Installation
       CRAFTCMS_LANGUAGE: de-AT
 
+      AUTO_UPDATE: 'false'
+
       REDIS_HOST: redis
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
