@@ -70,6 +70,8 @@ services:
       CRAFTCMS_SITEURL: http://dev.project.com # Optional
       CRAFTCMS_LANGUAGE: de-AT # Optional
 
+      AUTO_UPDATE: 'false' # Enable/disable auto updates for all composer packages (including Craft CMS, Default: true)
+
       REDIS_HOST: redis
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
@@ -144,6 +146,8 @@ services:
       CRAFTCMS_PASSWORD: super-secret-password
       CRAFTCMS_SITENAME: Craft CMS Installation
       CRAFTCMS_SITEURL: http://dev.project.com # Optional
+
+      AUTO_UPDATE: 'false' # Enable/disable auto updates for all composer packages (including Craft CMS, Default: true)
 
       REDIS_HOST: redis
       SESSION_DRIVER: redis

@@ -1,4 +1,5 @@
 declare DEPENDENCIES=(${DEPENDENCIES//,/ })
+declare AUTO_UPDATE=${AUTO_UPDATE:-true}
 
 update_dependencies() {
 	cd /var/www/html/
@@ -63,9 +64,12 @@ update_dependencies() {
 
 	done
 
-	h2 'Updating outdated dependencies.'
-
-	composer update
+    if $AUTO_UPDATE; then
+	    h2 'Updating outdated dependencies.'
+        composer update
+    else
+	    h2 'Skipping updates.'
+    fi
 
 	h2 '✅  All dependencies successfully installed.'
 }
