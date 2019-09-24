@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: "2.1"
+version: '2.1'
 
 services:
   nginx:
@@ -15,16 +15,16 @@ services:
       - ./assets:/var/www/html/web/assets # For static assets (media, js and css). We don't need PHP for them.
 
   craft:
-    image: urbantrout/craftcms:mysql
+    image: urbantrout/craftcms:postgresql
     depends_on:
-      - mariadb
+      - postgres
     volumes:
       - ./backups:/var/www/html/storage/backups
       - ./templates:/var/www/html/templates # Craft CMS template files
     environment:
-      DEPENDENCIES: >- # additional composer packages
-        yiisoft/yii2-redis
-        craftcms/redactor
+      DEPENDENCIES: >- # additional composer packages (must be comma separated)
+        yiisoft/yii2-redis,
+        craftcms/redactor,
 
       CRAFTCMS_EMAIL: harald@urbantrout.io
       CRAFTCMS_USERNAME: admin
@@ -38,26 +38,26 @@ services:
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
 
-      DB_SERVER: mariadb
+      DB_SERVER: postgres
       DB_NAME: craft
       DB_USER: craft
       DB_PASSWORD: secret
       DB_DATABASE: craft
       DB_SCHEMA: public
-      DB_DRIVER: mysql
-      DB_PORT: 3306
+      DB_DRIVER: pgsql
+      DB_PORT: 5432
       DB_TABLE_PREFIX: ut
 
-  mariadb:
-    image: mariadb:10.1
+  postgres:
+    image: postgres:9.6-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: craft
-      MYSQL_PASSWORD: secret
-      MYSQL_DATABASE: craft
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_USER: craft
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: craft
     volumes:
       # Persistent data
-      - dbdata:/var/lib/mysql
+      - pgdata:/var/lib/postgresql/data
 
   redis:
     image: redis:4-alpine
@@ -65,5 +65,5 @@ services:
       - redisdata:/data
 
 volumes:
-  dbdata:
+  pgdata:
   redisdata:
