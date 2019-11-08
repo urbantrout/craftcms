@@ -22,7 +22,7 @@ setup_database() {
 
 		ignore_file="backups/.ignore"
 
-		if [ -f $ignore_file ] && grep -q $1 $ignore_file; then
+		if [ -f $ignore_file ] && grep -q $sql_file $ignore_file; then
 			h2 "Ignoring file because it is listed in $ignore_file"
 		else
 			while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
