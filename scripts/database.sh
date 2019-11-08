@@ -1,17 +1,4 @@
-import_database() {
-	if grep -q $1 backups/.ignore; then
-		h2 "Ignoring file because it is listed in backups/.ignore"
-	else
-		while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
-			h2 "Waiting for MySQL server"
-			sleep 1
-		done
-
-		cat "$1" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && echo "$1" >>backups/.ignore
-	fi
-}
-
-check_database() {
+setup_database() {
 	declare zip_file
 	declare sql_file
 
@@ -33,7 +20,25 @@ check_database() {
 	if [[ "$sql_file" ]]; then
 		h2 "Database dump found: ${sql_file}"
 
-		import_database $sql_file
+		ignore_file="backups/.ignore"
+
+		if [ -f $ignore_file ] && grep -q $1 $ignore_file; then
+			h2 "Ignoring file because it is listed in $ignore_file"
+		else
+			while ! mysqladmin ping -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD --silent >/dev/null; do
+				h2 "Waiting for MySQL server"
+				sleep 1
+			done
+
+			h2 "Importing database"
+			cat "$sql_file" | mysql -h $DB_SERVER -u $DB_USER --password=$DB_PASSWORD $DB_DATABASE && \
+            echo "$sql_file" >> $ignore_file
+		fi
+
+		if [[ "$zip_file" ]]; then
+			h2 "Deleting decompressed SQL file."
+			rm $sql_file
+		fi
 	else
 		h2 "Setup Craft CMS"
 
