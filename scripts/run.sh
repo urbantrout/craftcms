@@ -7,9 +7,14 @@ source /scripts/database.sh
 source /scripts/composer.sh
 source /scripts/plugins.sh
 
-check_database &&
-	update_dependencies &&
-	activate_plugins
+setup_database &
+SETUP_PID=$!
+update_dependencies &
+DEPENDENDIES_PID=$!
+
+wait $SETUP_PID
+wait $DEPENDENCIES_PID
+activate_plugins
 
 wait
 

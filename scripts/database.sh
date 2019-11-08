@@ -1,17 +1,4 @@
-import_database() {
-	if grep -q $1 backups/.ignore; then
-		h2 "Ignoring file because it is listed in backups/.ignore"
-	else
-		while ! pg_isready -h $DB_SERVER; do
-			h2 "Waiting for PostreSQL server"
-			sleep 1
-		done
-
-		cat "$1" | psql -h $DB_SERVER -U $DB_USER && echo "$1" >>backups/.ignore
-	fi
-}
-
-check_database() {
+setup_database() {
 	declare zip_file
 	declare sql_file
 
@@ -37,7 +24,25 @@ check_database() {
 	if [[ "$sql_file" ]]; then
 		h2 "Database dump found: ${sql_file}"
 
-		import_database $sql_file
+		ignore_file="backups/.ignore"
+
+		if [ -f $ignore_file ] && grep -q $sql_file $ignore_file; then
+			h2 "Ignoring file because it is listed in $ignore_file"
+		else
+			while ! pg_isready -h $DB_SERVER; do
+				h2 "Waiting for PostreSQL server"
+				sleep 1
+			done
+
+			h2 "Importing database"
+			cat "$sql_file" | psql -h $DB_SERVER -U $DB_USER && \
+			echo "$sql_file" >> $ignore_file
+		fi
+
+		if [[ "$zip_file" ]]; then
+			h2 "Deleting decompressed SQL file."
+			rm $sql_file
+		fi
 	else
 		h2 "Setup Craft CMS"
 
