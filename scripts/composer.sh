@@ -49,7 +49,7 @@ update_dependencies() {
             url="${BASH_REMATCH[4]}"
             printf "Install \e[0;32mvcs composer package\e[0m: \e[0;36m${name} ${version}\e[0m\n"
             composer config repositories.${name} '{"type": "vcs", "url": "'${url}'", "no-api": true }'
-            composer require --update-with-dependencies --wit${name}:${version}
+            composer require --update-with-dependencies ${name}:${version}
         elif [[ $package =~ $regexLocal ]]; then
             name="${BASH_REMATCH[2]}"
             version="${BASH_REMATCH[3]}"
