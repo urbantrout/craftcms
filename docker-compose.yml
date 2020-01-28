@@ -22,9 +22,9 @@ services:
       - ./backups:/var/www/html/storage/backups
       - ./templates:/var/www/html/templates # Craft CMS template files
     environment:
-      DEPENDENCIES: >- # additional composer packages (must be comma separated)
-        yiisoft/yii2-redis,
-        craftcms/redactor,
+      DEPENDENCIES: >-
+        yiisoft/yii2-redis
+        craftcms/redactor
 
       CRAFTCMS_EMAIL: harald@urbantrout.io
       CRAFTCMS_USERNAME: admin
