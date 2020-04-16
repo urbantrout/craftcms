@@ -76,6 +76,7 @@ services:
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
 
+      DB_DSN: pgsql:host=postgres;dbname=craft
       DB_SERVER: postgres
       DB_NAME: craft
       DB_USER: craft
@@ -153,6 +154,7 @@ services:
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
 
+      DB_DSN: mysql:host=mariadb;dbname=craft
       DB_SERVER: mariadb
       DB_NAME: craft
       DB_USER: craft
