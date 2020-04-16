@@ -38,6 +38,7 @@ services:
       SESSION_DRIVER: redis
       CACHE_DRIVER: redis
 
+      DB_DSN: mysql:host=mariadb;dbname=craft
       DB_SERVER: mariadb
       DB_NAME: craft
       DB_USER: craft
